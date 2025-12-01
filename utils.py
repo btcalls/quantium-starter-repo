@@ -33,6 +33,7 @@ def clean_data(df):
     """
 
     cleaned_df = df.copy()
+
     # Filter to keep only "pink morsel" products; Remove 'product' column
     cleaned_df = cleaned_df[cleaned_df["product"] == "pink morsel"]
     cleaned_df.drop(["product"], axis=1, inplace=True)
@@ -41,6 +42,9 @@ def clean_data(df):
     cleaned_df["price"] = cleaned_df["price"] \
         .str.replace('$', '') \
         .astype(float)
+
+    # Convert 'date' column to datetime
+    cleaned_df["date"] = pd.to_datetime(cleaned_df["date"])
 
     return cleaned_df
 
@@ -65,8 +69,13 @@ def get_sales(df):
     return df_with_sales
 
 
-if __name__ == "__main__":
-    # Example usage
+def load_data():
+    """Loads and combines sales data from multiple CSV files into a single DataFrame.
+
+    Returns:
+        pd.DataFrame: A combined DataFrame containing sales data from all sources.
+    """
+
     data_0 = csv_to_df("data/daily_sales_data_0.csv", [])
     data_0_with_sales = get_sales(data_0)
     data_1 = csv_to_df("data/daily_sales_data_1.csv", [])
@@ -75,6 +84,14 @@ if __name__ == "__main__":
     data_2_with_sales = get_sales(data_2)
 
     merged_df = pd.concat(
-        [data_0_with_sales, data_1_with_sales, data_2_with_sales], ignore_index=True)
+        [data_0_with_sales, data_1_with_sales, data_2_with_sales],
+        ignore_index=True
+    )
 
-    merged_df.to_csv('data/combined_sales_data.csv', index=False)
+    return merged_df
+
+
+if __name__ == "__main__":
+    df = load_data()
+
+    df.to_csv('data/combined_sales_data.csv', index=False)
