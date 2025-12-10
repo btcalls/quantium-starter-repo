@@ -5,6 +5,9 @@ import plotly.express as px
 
 
 DATA_PATH = "data/combined_sales_data.csv"
+HEADER = "Soul Foods's Pink Morsel Sales Analysis"
+GRAPH_ID = "pink-morsel-graph"
+RADIO_ID = "region-radio"
 
 app = Dash()
 
@@ -18,8 +21,8 @@ REGIONS = list(map(lambda x: x.capitalize(),
 
 
 @callback(
-    Output("pink-morsel-graph", "figure"),
-    Input("radio", "value")
+    Output(GRAPH_ID, "figure"),
+    Input(RADIO_ID, "value")
 )
 def update_figure_by_region(selected_region):
     filtered_df = df.copy()
@@ -37,15 +40,19 @@ def update_figure_by_region(selected_region):
 
 
 app.layout = html.Div(children=[
-    html.H1(children="Soul Foods's Pink Morsel Sales Analysis"),
+    html.H1(children=HEADER),
     html.Div(children="""
         Were sales higher before or after the Pink Morsel price increase on the 15th of January, 2021?
         """),
 
-    dcc.Graph(id="pink-morsel-graph"),
+    dcc.Graph(id=GRAPH_ID),
 
     html.Label('Region:'),
-    dcc.RadioItems(REGIONS, value=REGIONS[-1], id="radio", labelStyle={'display': 'inline-block', 'margin-right': '20px', 'fontSize': '16px'},
+    dcc.RadioItems(REGIONS,
+                   value=REGIONS[-1],
+                   id=RADIO_ID,
+                   labelStyle={'display': 'inline-block',
+                               'margin-right': '20px', 'fontSize': '16px'},
                    inputStyle={'margin-right': '8px',
                                'width': '16px', 'height': '16px'},
                    style={'padding': '8px'})

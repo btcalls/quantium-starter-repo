@@ -5,9 +5,10 @@ name = "pypi"
 
 [packages]
 pandas = "*"
-dash = "*"
+dash = {extras = ["testing"], version = "*"}
 
 [dev-packages]
+webdriver-manager = "*"
 
 [requires]
 python_version = "3.13"
